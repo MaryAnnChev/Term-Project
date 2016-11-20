@@ -5,10 +5,15 @@ import java.sql.Date;
 import java.sql.Time;
 
 import ca.mcgill.ecse321.FTMS.model.Employee;
+import ca.mcgill.ecse321.FTMS.model.Equipment;
+import ca.mcgill.ecse321.FTMS.model.Menu;
+import ca.mcgill.ecse321.FTMS.model.OrderManager;
 import ca.mcgill.ecse321.FTMS.model.Schedule;
 import ca.mcgill.ecse321.FTMS.model.ScheduleRegistration;
 import ca.mcgill.ecse321.FTMS.model.StaffManager;
-import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStream;
+import ca.mcgill.ecse321.FTMS.model.Supply;
+import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamOrder;
+import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamSchedule;
 
 public class FTMSController {
 
@@ -17,26 +22,28 @@ public class FTMSController {
 	}
 	
 	public void createEmployee(String staffName, String staffRoles, int hours)throws InvalidInputException
-	{		
+	{		String error = "";
 		if (staffName==null|| staffName.trim().length() == 0)
-			throw new InvalidInputException("Employee name cannot be empty!");
+			error= error +"Employee name cannot be empty!";
 		if (staffRoles==null|| staffRoles.trim().length() == 0)
-			throw new InvalidInputException("Employee roles cannot be empty!");
+			error= error + "Employee roles cannot be empty!";
 		if (hours==0)
-			throw new InvalidInputException("Employee hour cannot be empty!");
-		
+			error= error +"hours to work cannot be 0";
+		if (error.length()> 0)
+			throw new InvalidInputException(error);
 		
 		Employee e = new Employee(staffName,staffRoles,hours);
 		
 		StaffManager sm = StaffManager.getInstance();
 		sm.addEmployee(e);
 		
-		PersistenceXStream.saveToXMLwithXStream(sm);
+		PersistenceXStreamSchedule.saveToXMLwithXStream(sm);
 	}
 	
 	public void createSchedule(String weekday, Date date, Time startTime, Time endTime) throws InvalidInputException
 	{
 		String error = "";
+		
 		if (weekday == null || weekday.trim().length() == 0 )
 			error = error + "Weekday cannot be empty!";
 		if (date == null)
@@ -54,7 +61,7 @@ public class FTMSController {
 		Schedule s = new Schedule(weekday, date, startTime, endTime);
 		StaffManager sm = StaffManager.getInstance();
 		sm.addSchedule(s);
-		PersistenceXStream.saveToXMLwithXStream(sm);
+		PersistenceXStreamSchedule.saveToXMLwithXStream(sm);
 		
 	}
 	public void scheduleRegister(Employee employee, Schedule schedule) throws InvalidInputException
@@ -76,8 +83,66 @@ public class FTMSController {
 		
 		ScheduleRegistration sr = new ScheduleRegistration(employee, schedule);
 		sm.addScheduleRegistration(sr);
-		PersistenceXStream.saveToXMLwithXStream(sm);
+		PersistenceXStreamSchedule.saveToXMLwithXStream(sm);
 		
 	}
 
+	public void createEquipment(String equipmentName,int equipmentQty)throws InvalidInputException
+	{	
+		OrderManager om = OrderManager.getInstance();
+
+		String error="";
+
+		if (equipmentQty==0)
+			error=error+"Equipment quantity cannot be empty!";
+		if (error.length()> 0)
+			throw new InvalidInputException(error);
+		
+		
+		Equipment e = new Equipment(equipmentName, equipmentQty);
+		
+		om.addEquipment(e);
+		
+		PersistenceXStreamOrder.saveToXMLwithXStream(om);
+	}
+	
+	public void createSupply(String foodName,int foodQty)throws InvalidInputException
+	{	
+		OrderManager om = OrderManager.getInstance();
+		String error="";
+		
+		if (foodQty==0)
+			error = error +"Food quantity cannot be empty!";
+		if (error.length()> 0)
+			throw new InvalidInputException(error);
+		
+		Supply s = new Supply(foodName, foodQty);
+		
+		om.addFoodSupply(s);
+		
+		PersistenceXStreamOrder.saveToXMLwithXStream(om);
+	}
+	
+	public void createMenu(String menuName, Supply ingredientName, int ingredientQty) throws InvalidInputException
+	{
+		
+			OrderManager om = OrderManager.getInstance();
+			String error = "";
+			if (menuName == null)
+				error = error + "Menu needs to be selected for Menu registration! ";
+			else if (ingredientName == null)
+				error = error + "Ingredient needs to be selected for Menu registration!";
+			else if(ingredientQty==0)
+				error=error+"ingredient quantity must be higher than 0";
+			error = error.trim();
+			if (error.length()> 0)
+				throw new InvalidInputException(error);
+			
+			Menu mr = new Menu(menuName, ingredientName, ingredientQty);
+				om.addMenus(mr);
+				PersistenceXStreamOrder.saveToXMLwithXStream(om);
+				
+	}
+	
+	
 }

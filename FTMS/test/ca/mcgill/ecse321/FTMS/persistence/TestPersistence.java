@@ -12,10 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ca.mcgill.ecse321.FTMS.model.Employee;
+import ca.mcgill.ecse321.FTMS.model.Equipment;
+import ca.mcgill.ecse321.FTMS.model.Menu;
+import ca.mcgill.ecse321.FTMS.model.OrderManager;
 import ca.mcgill.ecse321.FTMS.model.Schedule;
 import ca.mcgill.ecse321.FTMS.model.ScheduleRegistration;
 import ca.mcgill.ecse321.FTMS.model.StaffManager;
-import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStream;
+import ca.mcgill.ecse321.FTMS.model.Supply;
+import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamSchedule;
 
 public class TestPersistence {
 
@@ -47,7 +51,23 @@ public class TestPersistence {
 		fm.addSchedule(sc);
 		fm.addEmployee(em);
 		fm.addEmployee(em2);
+
+		// order section
+		OrderManager om = OrderManager.getInstance();
 		
+		//create Supply
+		Supply su = new Supply("orange",3);
+		
+		//create Equipment
+		Equipment eq = new Equipment("straw",3);
+				
+		//create Menu
+		Menu me = new Menu("hamburger",su,4);
+		
+		om.addFoodSupply(su);
+		om.addEquipment(eq);
+		om.addMenus(me);
+
 
 	}
 
@@ -56,20 +76,23 @@ public class TestPersistence {
 		//clear all Schedule registrations
 				StaffManager sm = StaffManager.getInstance();
 				sm.delete();
+				OrderManager om = OrderManager.getInstance();
+				om.delete();
+	
 	}
 
 	@Test
 	public void test() {
-		//save model
+		//save model for schedule
 				StaffManager sm = StaffManager.getInstance();
-				PersistenceXStream.setFilename("test"+File.separator + "ca"+File.separator+
+				PersistenceXStreamSchedule.setFilename("test"+File.separator + "ca"+File.separator+
 						"mcgill"+File.separator+"ecse321"+File.separator+"FTMS"+
-						File.separator+"persistence"+File.separator+"FTMSStaffData.xml");
-				PersistenceXStream.setAlias("schedule", Schedule.class);
-				PersistenceXStream.setAlias("employee", Employee.class);
-				PersistenceXStream.setAlias("scheduleRegistration", ScheduleRegistration.class);
-				PersistenceXStream.setAlias("manager", StaffManager.class);
-				if (!PersistenceXStream.saveToXMLwithXStream(sm))
+						File.separator+"persistence"+File.separator+"ScheduleFTMS.xml");
+				PersistenceXStreamSchedule.setAlias("schedule", Schedule.class);
+				PersistenceXStreamSchedule.setAlias("employee", Employee.class);
+				PersistenceXStreamSchedule.setAlias("scheduleRegistration", ScheduleRegistration.class);
+				PersistenceXStreamSchedule.setAlias("manager", StaffManager.class);
+				if (!PersistenceXStreamSchedule.saveToXMLwithXStream(sm))
 				fail("Could not save file.");
 				
 				//clear the model in memory
@@ -79,7 +102,7 @@ public class TestPersistence {
 				assertEquals(0, sm.getScheduleRegistrations().size());
 				
 				//load model
-				sm = (StaffManager) PersistenceXStream.loadFromXMLwithXStream();
+				sm = (StaffManager) PersistenceXStreamSchedule.loadFromXMLwithXStream();
 				if (sm == null)
 					fail("could not load file.");
 				
@@ -112,6 +135,46 @@ public class TestPersistence {
 				assertEquals(sm.getEmployee(0), sm.getScheduleRegistration(0).getEmployee());
 				assertEquals(sm.getSchedule(0), sm.getScheduleRegistration(1).getSchedule());
 				assertEquals(sm.getEmployee(1), sm.getScheduleRegistration(1).getEmployee());
+				
+		//save model for order
+				OrderManager om = OrderManager.getInstance();
+				PersistenceXStreamSchedule.setFilename("test"+File.separator + "ca"+File.separator+
+						"mcgill"+File.separator+"ecse321"+File.separator+"FTMS"+
+						File.separator+"persistence"+File.separator+"OrderFTMS.xml");
+				PersistenceXStreamSchedule.setAlias("supply", Supply.class);
+				PersistenceXStreamSchedule.setAlias("equipment", Equipment.class);
+				PersistenceXStreamSchedule.setAlias("menu", Menu.class);
+				PersistenceXStreamSchedule.setAlias("manager", OrderManager.class);
+				if (!PersistenceXStreamOrder.saveToXMLwithXStream(om))
+				fail("Could not save file.");
+				
+				//clear the model in memory
+				om.delete();
+				assertEquals(0, om.getFoodSupplies().size());
+				assertEquals(0, om.getEquipments().size());
+				assertEquals(0, om.getMenus().size());
+				
+				//load model
+				om = (OrderManager) PersistenceXStreamOrder.loadFromXMLwithXStream();
+				if (om == null)
+					fail("could not load file.");
+				
+				//check supplies
+				assertEquals(1, om.getFoodSupplies().size());
+				assertEquals("orange", om.getFoodSupply(0).getFoodName().toString());
+				assertEquals(3,om.getFoodSupply(0).getFoodQty());
+				
+				//check equipments
+				assertEquals(1, om.getEquipments().size());
+				assertEquals("straw", om.getEquipment(0).getEquipmentName());
+				assertEquals(3,om.getEquipment(0).getEquipmentQty());
+				
+				//check menus
+				assertEquals(1, om.getMenus().size());
+				assertEquals("hamburger", om.getMenus(0).getMealName());
+				assertEquals(om.getFoodSupply(0), om.getMenus(0).getIngredientName());
+				assertEquals(4,om.getMenus(0).getIngredientQty());
+				
 				
 				
 	}

@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.FTMS.model;
 
 // line 53 "../../../../../FTMS.ump"
-// line 88 "../../../../../FTMS.ump"
+// line 82 "../../../../../FTMS.ump"
 public class Equipment
 {
 

@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.FTMS.controller;
 
 import static org.junit.Assert.*;
 
+
 import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
@@ -14,28 +15,44 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.mcgill.ecse321.FTMS.model.Employee;
+import ca.mcgill.ecse321.FTMS.model.Equipment;
+import ca.mcgill.ecse321.FTMS.model.Menu;
+import ca.mcgill.ecse321.FTMS.model.OrderManager;
 import ca.mcgill.ecse321.FTMS.model.Schedule;
 import ca.mcgill.ecse321.FTMS.model.ScheduleRegistration;
 import ca.mcgill.ecse321.FTMS.model.StaffManager;
-import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStream;
+import ca.mcgill.ecse321.FTMS.model.Supply;
+import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamOrder;
+import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamSchedule;
 
 public class TestFTMSController {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-			PersistenceXStream.setFilename("test"+File.separator + "ca"+File.separator+
+			PersistenceXStreamSchedule.setFilename("test"+File.separator + "ca"+File.separator+
 					"mcgill"+File.separator+"ecse321"+File.separator+"FTMS"+
-					File.separator+"controller"+File.separator+"FTMSStaffData.xml");
-			PersistenceXStream.setAlias("schedule", Schedule.class);
-			PersistenceXStream.setAlias("employee", Employee.class);
-			PersistenceXStream.setAlias("registration", ScheduleRegistration.class);
-			PersistenceXStream.setAlias("manager", StaffManager.class);
+					File.separator+"controller"+File.separator+"ScheduleFTMS.xml");
+			PersistenceXStreamSchedule.setAlias("schedule", Schedule.class);
+			PersistenceXStreamSchedule.setAlias("employee", Employee.class);
+			PersistenceXStreamSchedule.setAlias("registration", ScheduleRegistration.class);
+			PersistenceXStreamSchedule.setAlias("manager", StaffManager.class);
+			PersistenceXStreamOrder.setAlias("supply", Supply.class);
+			PersistenceXStreamOrder.setAlias("equipment", Equipment.class);
+			PersistenceXStreamOrder.setAlias("menu", Menu.class);
+			PersistenceXStreamOrder.setAlias("manager", OrderManager.class);
+
+			PersistenceXStreamOrder.setFilename("test"+File.separator + "ca"+File.separator+
+					"mcgill"+File.separator+"ecse321"+File.separator+"FTMS"+
+					File.separator+"controller"+File.separator+"OrderFTMS.xml");
+			
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		//clear all registrations
 		StaffManager sm = StaffManager.getInstance();
+		OrderManager om = OrderManager.getInstance();
+		om.delete();
 		sm.delete();
 	}
 
@@ -47,6 +64,8 @@ public class TestFTMSController {
 	public void tearDown() throws Exception {
 		//clear all registrations
 		StaffManager sm = StaffManager.getInstance();
+		OrderManager om = OrderManager.getInstance();
+		om.delete();
 		sm.delete();
 	}
 
@@ -68,7 +87,7 @@ public class TestFTMSController {
 			
 			checkResultEmployee(name,role,hours, sm);
 			
-			StaffManager sm2 = (StaffManager) PersistenceXStream.loadFromXMLwithXStream();
+			StaffManager sm2 = (StaffManager) PersistenceXStreamSchedule.loadFromXMLwithXStream();
 			
 			//check file content
 			checkResultEmployee(name,role,hours, sm2);
@@ -91,7 +110,7 @@ public class TestFTMSController {
 		}
 		
 		//check error
-		assertEquals("Employee name cannot be empty!", error);
+		assertEquals("Employee name cannot be empty!Employee roles cannot be empty!hours to work cannot be 0", error);
 
 		//check no change in memory
 		assertEquals(0, sm.getEmployees().size());
@@ -118,7 +137,7 @@ public class TestFTMSController {
 		}
 		
 		//check error
-		assertEquals("Employee name cannot be empty!", error);
+		assertEquals("Employee name cannot be empty!Employee roles cannot be empty!hours to work cannot be 0", error);
 
 		//check no change in memory
 		assertEquals(0, sm.getEmployees().size());
@@ -143,7 +162,7 @@ public class TestFTMSController {
 		}
 		
 		//check error
-		assertEquals("Employee name cannot be empty!", error);
+		assertEquals("Employee name cannot be empty!Employee roles cannot be empty!hours to work cannot be 0", error);
 
 		//check no change in memory
 		assertEquals(0, sm.getEmployees().size());
@@ -172,7 +191,7 @@ public class TestFTMSController {
 		}
 		//check model in memory
 		checkResultSchedule(nameS, date, startTime, endTime, sm);
-		StaffManager sm2 = (StaffManager) PersistenceXStream.loadFromXMLwithXStream();
+		StaffManager sm2 = (StaffManager) PersistenceXStreamSchedule.loadFromXMLwithXStream();
 		
 		// check file contents
 		checkResultSchedule(nameS, date, startTime, endTime, sm2);
@@ -316,7 +335,7 @@ public class TestFTMSController {
 		//check model in memory
 		checkResultScheduleRegister(nameE,roleE, hours,nameS,  date, startTime, endTime, sm);
 		
-		StaffManager sm2 = (StaffManager) PersistenceXStream.loadFromXMLwithXStream();
+		StaffManager sm2 = (StaffManager) PersistenceXStreamSchedule.loadFromXMLwithXStream();
 		
 		//check file contents
 		checkResultScheduleRegister(nameE, roleE,hours,nameS, date, startTime, endTime, sm2);
@@ -386,7 +405,194 @@ public class TestFTMSController {
 		assertEquals(0, sm.getEmployees().size());
 		assertEquals(0, sm.getSchedules().size());
 	}
-			
+
+	public void testCreateSupply() {
+		OrderManager om = OrderManager.getInstance();
+		assertEquals(0, om.getFoodSupplies().size());
+		
+		String foodName = "orange";
+		int foodQty = 3;
+		FTMSController erc = new FTMSController();
+		try {
+			erc.createSupply(foodName, foodQty);
+		} catch (InvalidInputException e) {
+			// check that no error occurred
+			fail();
+		}
+		
+		checkResultSupply(foodName,foodQty, om);
+		
+		OrderManager om2 = (OrderManager) PersistenceXStreamOrder.loadFromXMLwithXStream();
+		
+		//check file content
+		checkResultSupply(foodName, foodQty, om2);
+}
+
+@Test
+public void testCreateSupplyNull(){
+	OrderManager om = OrderManager.getInstance();
+	assertEquals(0, om.getFoodSupplies().size());
+	
+	String foodName = null;
+	int foodQty = 0;
+	String error = null;
+	FTMSController erc = new FTMSController();
+	try{
+		erc.createSupply(foodName,foodQty);
+	} catch(InvalidInputException e){
+		error = e.getMessage();
+	}
+	
+	//check error
+	assertEquals("Food quantity cannot be empty!", error);
+
+	//check no change in memory
+	assertEquals(0, om.getFoodSupplies().size());
+	
+
+}
+
+@Test
+public void testCreateSupplyEmpty(){
+	
+	OrderManager om = OrderManager.getInstance();
+	assertEquals(0, om.getFoodSupplies().size());
+	
+	String foodName = null;
+	int foodQty = 0;
+	
+	String error = null;
+	FTMSController erc = new FTMSController();
+	try{
+		erc.createSupply(foodName, foodQty);
+	} catch(InvalidInputException e){
+		error = e.getMessage();
+	}
+	
+	//check error
+	assertEquals("Food quantity cannot be empty!", error);
+
+	//check no change in memory
+	assertEquals(0, om.getFoodSupplies().size());
+
+}
+
+@Test
+public void testCreateSupplySpaces(){
+	
+	OrderManager om = OrderManager.getInstance();
+	assertEquals(0, om.getFoodSupplies().size());
+	
+	String foodName = " ";
+	int foodQty = 0;
+	String error = null;
+	FTMSController erc = new FTMSController();
+	try{
+		erc.createSupply(foodName, foodQty);
+	} catch(InvalidInputException e){
+		error = e.getMessage();
+	}
+	
+	//check error
+	assertEquals("Food quantity cannot be empty!", error);
+
+	//check no change in memory
+	assertEquals(0, om.getFoodSupplies().size());
+}
+
+public void testCreateEquipment() {
+	OrderManager om = OrderManager.getInstance();
+	assertEquals(0, om.getEquipments().size());
+	
+	String equipmentName = "straw";
+	int equipmentQty = 3;
+	FTMSController erc = new FTMSController();
+	try {
+		erc.createEquipment(equipmentName, equipmentQty);
+	} catch (InvalidInputException e) {
+		// check that no error occurred
+		fail();
+	}
+	
+	checkResultSupply(equipmentName,equipmentQty, om);
+	
+	OrderManager om2 = (OrderManager) PersistenceXStreamOrder.loadFromXMLwithXStream();
+	
+	//check file content
+	checkResultEquipment(equipmentName, equipmentQty, om2);
+}
+
+@Test
+public void testCreateEquipmentNull(){
+OrderManager om = OrderManager.getInstance();
+assertEquals(0, om.getEquipments().size());
+
+String equipmentName = null;
+int equipmentQty = 0;
+String error = null;
+FTMSController erc = new FTMSController();
+try{
+	erc.createEquipment(equipmentName,equipmentQty);
+} catch(InvalidInputException e){
+	error = e.getMessage();
+}
+
+//check error
+assertEquals("Equipment quantity cannot be empty!", error);
+
+//check no change in memory
+assertEquals(0, om.getEquipments().size());
+
+
+}
+
+@Test
+public void testCreateEquipmentEmpty(){
+
+OrderManager om = OrderManager.getInstance();
+assertEquals(0, om.getEquipments().size());
+
+String equipmentName = null;
+int equipmentQty = 0;
+
+String error = null;
+FTMSController erc = new FTMSController();
+try{
+	erc.createEquipment(equipmentName, equipmentQty);
+} catch(InvalidInputException e){
+	error = e.getMessage();
+}
+
+//check error
+assertEquals("Equipment quantity cannot be empty!", error);
+
+//check no change in memory
+assertEquals(0, om.getEquipments().size());
+
+}
+
+@Test
+public void testCreateEquipmentSpaces(){
+
+OrderManager om = OrderManager.getInstance();
+assertEquals(0, om.getEquipments().size());
+
+String equipmentName = " ";
+int equipmentQty = 0;
+String error = null;
+FTMSController erc = new FTMSController();
+try{
+	erc.createEquipment(equipmentName, equipmentQty);
+} catch(InvalidInputException e){
+	error = e.getMessage();
+}
+
+//check error
+assertEquals("Equipment quantity cannot be empty!", error);
+
+//check no change in memory
+assertEquals(0, om.getEquipments().size());
+}
 	
 
 
@@ -424,6 +630,21 @@ public class TestFTMSController {
 		
 	}
 	
+	private void checkResultSupply(String foodName, int foodQty,  OrderManager om2) {
+		assertEquals(1, om2.getFoodSupplies().size());
+		assertEquals(foodName, om2.getFoodSupply(0).getFoodName());
+		assertEquals(foodQty, om2.getFoodSupply(0).getFoodQty());
+		assertEquals(0, om2.getEquipments().size());
+	}
+
+
+	private void checkResultEquipment(String equipmentName, int equipmentQty,  OrderManager om2) {
+		assertEquals(1, om2.getEquipments().size());
+		assertEquals(equipmentName, om2.getFoodSupply(0).getFoodName());
+		assertEquals(equipmentQty, om2.getFoodSupply(0).getFoodQty());
+		assertEquals(0, om2.getFoodSupplies().size());
+	}
+
 }
 
 

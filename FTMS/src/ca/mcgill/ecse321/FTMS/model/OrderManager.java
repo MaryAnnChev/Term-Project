@@ -5,7 +5,7 @@ package ca.mcgill.ecse321.FTMS.model;
 import java.util.*;
 
 // line 44 "../../../../../FTMS.ump"
-// line 110 "../../../../../FTMS.ump"
+// line 104 "../../../../../FTMS.ump"
 public class OrderManager
 {
 
@@ -21,7 +21,7 @@ public class OrderManager
 
   //OrderManager Associations
   private List<Equipment> equipments;
-  private List<Supply> supplies;
+  private List<Supply> foodSupplies;
   private List<Menu> menus;
   private List<OrderTracker> tracker;
 
@@ -32,7 +32,7 @@ public class OrderManager
   private OrderManager()
   {
     equipments = new ArrayList<Equipment>();
-    supplies = new ArrayList<Supply>();
+    foodSupplies = new ArrayList<Supply>();
     menus = new ArrayList<Menu>();
     tracker = new ArrayList<OrderTracker>();
   }
@@ -80,33 +80,33 @@ public class OrderManager
     return index;
   }
 
-  public Supply getSupply(int index)
+  public Supply getFoodSupply(int index)
   {
-    Supply aSupply = supplies.get(index);
-    return aSupply;
+    Supply aFoodSupply = foodSupplies.get(index);
+    return aFoodSupply;
   }
 
-  public List<Supply> getSupplies()
+  public List<Supply> getFoodSupplies()
   {
-    List<Supply> newSupplies = Collections.unmodifiableList(supplies);
-    return newSupplies;
+    List<Supply> newFoodSupplies = Collections.unmodifiableList(foodSupplies);
+    return newFoodSupplies;
   }
 
-  public int numberOfSupplies()
+  public int numberOfFoodSupplies()
   {
-    int number = supplies.size();
+    int number = foodSupplies.size();
     return number;
   }
 
-  public boolean hasSupplies()
+  public boolean hasFoodSupplies()
   {
-    boolean has = supplies.size() > 0;
+    boolean has = foodSupplies.size() > 0;
     return has;
   }
 
-  public int indexOfSupply(Supply aSupply)
+  public int indexOfFoodSupply(Supply aFoodSupply)
   {
-    int index = supplies.indexOf(aSupply);
+    int index = foodSupplies.indexOf(aFoodSupply);
     return index;
   }
 
@@ -227,59 +227,59 @@ public class OrderManager
     return wasAdded;
   }
 
-  public static int minimumNumberOfSupplies()
+  public static int minimumNumberOfFoodSupplies()
   {
     return 0;
   }
 
-  public boolean addSupply(Supply aSupply)
+  public boolean addFoodSupply(Supply aFoodSupply)
   {
     boolean wasAdded = false;
-    if (supplies.contains(aSupply)) { return false; }
-    supplies.add(aSupply);
+    if (foodSupplies.contains(aFoodSupply)) { return false; }
+    foodSupplies.add(aFoodSupply);
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeSupply(Supply aSupply)
+  public boolean removeFoodSupply(Supply aFoodSupply)
   {
     boolean wasRemoved = false;
-    if (supplies.contains(aSupply))
+    if (foodSupplies.contains(aFoodSupply))
     {
-      supplies.remove(aSupply);
+      foodSupplies.remove(aFoodSupply);
       wasRemoved = true;
     }
     return wasRemoved;
   }
 
-  public boolean addSupplyAt(Supply aSupply, int index)
+  public boolean addFoodSupplyAt(Supply aFoodSupply, int index)
   {  
     boolean wasAdded = false;
-    if(addSupply(aSupply))
+    if(addFoodSupply(aFoodSupply))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfSupplies()) { index = numberOfSupplies() - 1; }
-      supplies.remove(aSupply);
-      supplies.add(index, aSupply);
+      if(index > numberOfFoodSupplies()) { index = numberOfFoodSupplies() - 1; }
+      foodSupplies.remove(aFoodSupply);
+      foodSupplies.add(index, aFoodSupply);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveSupplyAt(Supply aSupply, int index)
+  public boolean addOrMoveFoodSupplyAt(Supply aFoodSupply, int index)
   {
     boolean wasAdded = false;
-    if(supplies.contains(aSupply))
+    if(foodSupplies.contains(aFoodSupply))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfSupplies()) { index = numberOfSupplies() - 1; }
-      supplies.remove(aSupply);
-      supplies.add(index, aSupply);
+      if(index > numberOfFoodSupplies()) { index = numberOfFoodSupplies() - 1; }
+      foodSupplies.remove(aFoodSupply);
+      foodSupplies.add(index, aFoodSupply);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addSupplyAt(aSupply, index);
+      wasAdded = addFoodSupplyAt(aFoodSupply, index);
     }
     return wasAdded;
   }
@@ -401,7 +401,7 @@ public class OrderManager
   public void delete()
   {
     equipments.clear();
-    supplies.clear();
+    foodSupplies.clear();
     menus.clear();
     tracker.clear();
   }

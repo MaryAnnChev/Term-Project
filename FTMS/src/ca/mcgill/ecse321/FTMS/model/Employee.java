@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.FTMS.model;
 
 // line 19 "../../../../../FTMS.ump"
-// line 135 "../../../../../FTMS.ump"
+// line 130 "../../../../../FTMS.ump"
 public class Employee
 {
 

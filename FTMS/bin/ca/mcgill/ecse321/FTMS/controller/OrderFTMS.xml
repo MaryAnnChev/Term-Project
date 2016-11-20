@@ -1,0 +1,22 @@
+<manager id="1">
+  <equipments id="2">
+    <equipment id="3">
+      <equipmentName>straw</equipmentName>
+      <equipmentQty>3</equipmentQty>
+    </equipment>
+  </equipments>
+  <foodSupplies id="4">
+    <supply id="5">
+      <foodName>orange</foodName>
+      <foodQty>3</foodQty>
+    </supply>
+  </foodSupplies>
+  <menus id="6">
+    <menu id="7">
+      <mealName>hamburger</mealName>
+      <ingredientName reference="5"/>
+      <ingredientQty>4</ingredientQty>
+    </menu>
+  </menus>
+  <tracker id="8"/>
+</manager>

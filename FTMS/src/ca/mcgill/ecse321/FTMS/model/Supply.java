@@ -4,7 +4,7 @@
 package ca.mcgill.ecse321.FTMS.model;
 
 // line 58 "../../../../../FTMS.ump"
-// line 145 "../../../../../FTMS.ump"
+// line 140 "../../../../../FTMS.ump"
 public class Supply
 {
 
