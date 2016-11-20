@@ -3,7 +3,7 @@ install: ant deps
 jdk:
 - oraclejdk8
 
-sudo: false
+sudo: required
 addons:
 apt:
 packages:
