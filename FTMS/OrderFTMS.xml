@@ -10,13 +10,29 @@
       <foodName>dddssssaaa</foodName>
       <foodQty>4</foodQty>
     </supply>
+    <supply id="6">
+      <foodName></foodName>
+      <foodQty>5</foodQty>
+    </supply>
+    <supply id="7">
+      <foodName>orange</foodName>
+      <foodQty>5</foodQty>
+    </supply>
+    <supply id="8">
+      <foodName>orange</foodName>
+      <foodQty>2</foodQty>
+    </supply>
+    <supply id="9">
+      <foodName>apple</foodName>
+      <foodQty>3</foodQty>
+    </supply>
   </foodSupplies>
-  <menus id="6">
-    <menu id="7">
-      <mealName>kdhkjdhfkjdhfjkf</mealName>
-      <ingredientName reference="5"/>
-      <ingredientQty>7</ingredientQty>
+  <menus id="10">
+    <menu id="11">
+      <mealName>jjdjdjjdd</mealName>
+      <ingredientName reference="9"/>
+      <ingredientQty>3</ingredientQty>
     </menu>
   </menus>
-  <tracker id="8"/>
+  <tracker id="12"/>
 </manager>

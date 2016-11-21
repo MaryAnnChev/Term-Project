@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.FTMS.view;
 
 import java.awt.Color;
-
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -16,7 +16,13 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ca.mcgill.ecse321.FTMS.controller.FTMSController;
 import ca.mcgill.ecse321.FTMS.controller.InvalidInputException;
@@ -56,6 +62,7 @@ public class InventoryPage extends JFrame {
 	private HashMap<Integer, Supply> foodSupplies;
 	private Integer selectedEquipment = -1;
 	private HashMap<Integer, Equipment> equipments;
+
 	
 	/** Creates new form FTMSPage */
 	public InventoryPage(){
@@ -84,8 +91,36 @@ public class InventoryPage extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt){
 				JComboBox<String> cb =(JComboBox<String>)evt.getSource();
 				selectedFood = cb.getSelectedIndex();
+				
+				try {
+					File file = new File("OrderFTMS.xml");
+					DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+					        .newInstance();
+					DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+					Document doc = documentBuilder.parse(file);
+					
+					NodeList listOfSupplies = doc.getElementsByTagName("supply");
+					
+					int foodQty=0;
+					
+					for(int i=0; i<listOfSupplies.getLength(); i++) {
+						Node firstSupplyNode = listOfSupplies.item(i);
+						if (firstSupplyNode.getNodeType() == Node.ELEMENT_NODE) {
+							
+							foodQty = Integer.parseInt(((Element)firstSupplyNode).getFirstChild().getNextSibling().getNextSibling().getTextContent());
+							
+						}
+					}
+					foodQtySpinner.setValue(foodQty);
+
+					
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());
+				}				
 			}
 		});
+
 		foodLabel = new JLabel();
 		
 		addFoodButton = new JButton();
@@ -236,6 +271,9 @@ public class InventoryPage extends JFrame {
 	}
 	
 	private void addFoodButtonActionPerformed(java.awt.event.ActionEvent evt){
+		
+		
+
 		//call the controller
 		FTMSController erc = new FTMSController();
 		String name;
@@ -254,6 +292,7 @@ public class InventoryPage extends JFrame {
 		refreshData();
 	}
 	private void addEquipmentButtonActionPerformed(java.awt.event.ActionEvent evt){
+		
 		//call the controller
 		FTMSController erc = new FTMSController();
 		int equipmentqty= (int) equipmentQtySpinner.getValue();
@@ -272,6 +311,24 @@ public class InventoryPage extends JFrame {
 		//update visuals
 		refreshData();	
 	}
+	
+	/*private void getDocument (String filename) { // TODO: Close file or doc? So that it we can see what gets updated
+		try {
+			File file = new File("OrderFTMS.xml");
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+			        .newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			document = documentBuilder.parse(file);
+		}
+		catch (Exception e) {
+			System.out.println("Error reading xml file.");
+			System.out.println(e.getMessage());
+		}
+	}*/
+	
+	
+	
+	
 	}
 
 
