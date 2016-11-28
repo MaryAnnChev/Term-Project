@@ -12,7 +12,7 @@
         <string name="newstaff_hours_label">hours?</string>
         <string name="order_button">ORDER</string>
         <string name="newmenuitem_hint">Dish name?</string>
-        <string name="newmenuitem_button">ADD MENU ITEM</string>
+        <string name="newmenuitem_button">ADD DISH</string>
         <string name="placingorder_text">Place an order</string>
         <string name="title_activity_main_menu">mainMenu</string>
         <string name="newstaff_n_hint">Name?</string>

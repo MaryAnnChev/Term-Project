@@ -31,11 +31,6 @@
                 android:layout_height="5dp"
                 android:layout_weight="1" />
 
-            <View
-                android:layout_height="2dp"
-                android:layout_width="fill_parent"
-                android:background="#FFFFFF"/>
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_height="wrap_content"
@@ -105,7 +100,8 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -143,7 +139,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/newstaff_button"
                     android:layout_gravity="end"
-                    android:onClick="addStaff"/>
+                    android:onClick="addStaff"
+                    android:id="@+id/newstaff_button" />
 
 
             </LinearLayout>
@@ -162,27 +159,22 @@
                 <EditText
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:id="@+id/newmenu_name"
-                    android:hint="@string/newstaff_n_hint"/>
+                    android:id="@+id/newmenuitem_name"
+                    android:hint="@string/newmenuitem_hint"/>
 
-                <EditText
-                    android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:id="@+id/newstaff_role"
-                    android:hint="@string/newstaff_r_hint"/>
 
-                <EditText
-                    android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:id="@+id/newstaff_hours"
-                    android:hint="@string/newstaff_h_hint"/>
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/menuitem_list" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/newstaff_button"
+                    android:text="@string/newmenuitem_button"
                     android:layout_gravity="end"
-                    android:onClick="addStaff"/>
+                    android:onClick="addMenuItem"
+                    android:id="@+id/newmenuitem_button" />
 
 
             </LinearLayout>
