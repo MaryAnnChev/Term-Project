@@ -67,6 +67,8 @@ public class addMenu extends AppCompatActivity {
         tvSTN.setText("");
         TextView tvDN = (TextView) findViewById(R.id.newmenuitem_name);
         tvDN.setText("");
+        TextView tvDP = (TextView) findViewById(R.id.newmenuitem_price);
+        tvDP.setText("");
 
         Button e = (Button) findViewById(R.id.newequipment_button);
         e.setError(null);
@@ -76,6 +78,8 @@ public class addMenu extends AppCompatActivity {
         d.setError(null);
         Button st = (Button) findViewById(R.id.newstaff_button);
         st.setError(null);
+        Button mi = (Button) findViewById(R.id.newmenuitem_button);
+        mi.setError(null);
 
         updateSupplyListView();
     }
@@ -121,6 +125,7 @@ public class addMenu extends AppCompatActivity {
             fc.createEquipment(tv1.getText().toString(), Integer.parseInt(tv2.getText().toString()));
             refreshData();
         } catch (Exception e) {
+            bn.requestFocus();
             bn.setError(e.getMessage());
         }
     }
@@ -136,6 +141,7 @@ public class addMenu extends AppCompatActivity {
             updateSupplyListView();
             refreshData();
         } catch (Exception e) {
+            bn.requestFocus();
             bn.setError(e.getMessage());
         }
     }
@@ -150,6 +156,7 @@ public class addMenu extends AppCompatActivity {
             fc.createEmployee(tv1.getText().toString(), tv2.getText().toString());
             refreshData();
         } catch (Exception e) {
+            bn.requestFocus();
             bn.setError(e.getMessage());
         }
     }
@@ -161,12 +168,14 @@ public class addMenu extends AppCompatActivity {
             ingredients.add(om.getFoodSupply(selectedSupplies.get(i)));
 
         TextView tv1 = (TextView) findViewById(R.id.newmenuitem_name);
+        TextView tv2 = (TextView) findViewById(R.id.newmenuitem_price);
         Button bn = (Button) findViewById(R.id.newmenuitem_button);
 
         try {
-            fc.createMenu(tv1.getText().toString(), ingredients);
+            fc.createMenu(tv1.getText().toString(), ingredients, Double.parseDouble(tv2.getText().toString()));
             refreshData();
         } catch (Exception e) {
+            bn.requestFocus();
             bn.setError(e.getMessage());
         }
     }

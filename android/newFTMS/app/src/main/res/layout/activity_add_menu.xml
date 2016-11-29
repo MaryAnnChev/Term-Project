@@ -160,8 +160,13 @@
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:id="@+id/newmenuitem_name"
-                    android:hint="@string/newmenuitem_hint"/>
+                    android:hint="@string/newmenuitem_n_hint"/>
 
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:id="@+id/newmenuitem_price"
+                    android:hint="@string/newmenuitem_p_hint"/>
 
                 <ListView
                     android:layout_width="match_parent"

@@ -19,9 +19,9 @@ import ca.mcgill.ecse321.FTMS.model.Supply;
 public class inventoryMenu extends AppCompatActivity {
 
     private FTMSController fc = new FTMSController();
-    private String equipmentSelected;
-    private String dishSelected;
-    private String supplySelected;
+    private String equipmentSelected = null;
+    private String dishSelected = null;
+    private String supplySelected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,28 +126,32 @@ public class inventoryMenu extends AppCompatActivity {
     }
 
     public void increaseEquipment(View v) {
-        OrderManager om = OrderManager.getInstance();
-        Equipment e = om.getEquipment(equipmentSelected);
-        e.setEquipmentQty(e.getEquipmentQty()+1);
-        int position = 0;
-        for (int i=0; i<om.getEquipments().size(); i++) {
-            if (e == om.getEquipment(i))
-                position = i;
-        }
-        updateEquipmentSpinner(position);
-    }
-
-    public void decreaseEquipment(View v) {
-        OrderManager om = OrderManager.getInstance();
-        Equipment e = om.getEquipment(equipmentSelected);
-        if (e.getEquipmentQty() > 0) {
-            e.setEquipmentQty(e.getEquipmentQty()-1);
+        if (equipmentSelected != null) {
+            OrderManager om = OrderManager.getInstance();
+            Equipment e = om.getEquipment(equipmentSelected);
+            e.setEquipmentQty(e.getEquipmentQty() + 1);
             int position = 0;
-            for (int i=0; i<om.getEquipments().size(); i++) {
+            for (int i = 0; i < om.getEquipments().size(); i++) {
                 if (e == om.getEquipment(i))
                     position = i;
             }
             updateEquipmentSpinner(position);
+        }
+    }
+
+    public void decreaseEquipment(View v) {
+        if (equipmentSelected != null) {
+            OrderManager om = OrderManager.getInstance();
+            Equipment e = om.getEquipment(equipmentSelected);
+            if (e.getEquipmentQty() > 0) {
+                e.setEquipmentQty(e.getEquipmentQty() - 1);
+                int position = 0;
+                for (int i = 0; i < om.getEquipments().size(); i++) {
+                    if (e == om.getEquipment(i))
+                        position = i;
+                }
+                updateEquipmentSpinner(position);
+            }
         }
     }
     // ****
@@ -172,6 +176,8 @@ public class inventoryMenu extends AppCompatActivity {
         Menu myDishSelected = om.getMenu(dishSelected);
         TextView dishesLeft = (TextView) findViewById(R.id.dishes_left_text);
         dishesLeft.setText(myDishSelected.getMealsLeft() + " dishes of " + myDishSelected.getMealName() + " remaining.");
+        TextView price = (TextView) findViewById(R.id.dishes_price_text);
+        price.setText("Price: " + Double.toString(myDishSelected.getPrice()));
         TextView dishIngredients = (TextView) findViewById(R.id.dishes_ingredients_text);
         String ingredients = myDishSelected.getMealName() + " is made of ";
         for (int i=0; i<myDishSelected.getIngredients().size(); i++) {
@@ -187,20 +193,23 @@ public class inventoryMenu extends AppCompatActivity {
     }
 
     public void placeOrder(View v) {
-        Button order = (Button) findViewById(R.id.order_button);
-        OrderManager om = OrderManager.getInstance();
-        int position = 0;
-        try {
-            fc.placeOrder(dishSelected);
-            for (int i=0; i<om.getMenus().size(); i++) {
-                if (om.getMenu(dishSelected) == om.getMenu(i))
-                    position = i;
+        if (dishSelected != null) {
+            Button order = (Button) findViewById(R.id.order_button);
+            order.setError(null);
+            OrderManager om = OrderManager.getInstance();
+            int position = 0;
+            try {
+                fc.placeOrder(dishSelected);
+                for (int i = 0; i < om.getMenus().size(); i++) {
+                    if (om.getMenu(dishSelected) == om.getMenu(i))
+                        position = i;
+                }
+            } catch (Exception e) {
+                order.setError(e.getMessage());
             }
-        } catch (Exception e) {
-            order.setError(e.getMessage());
+            updateDishSpinner(position);
+            updateSuppliesSpinner(0);
         }
-        updateDishSpinner(position);
-        updateSuppliesSpinner(0);
     }
     // ****
 
@@ -220,30 +229,34 @@ public class inventoryMenu extends AppCompatActivity {
     }
 
     public void increaseSupply(View v) {
-        OrderManager om = OrderManager.getInstance();
-        Supply s = om.getFoodSupply(supplySelected);
-        s.setFoodQty(s.getFoodQty()+1);
-        int position = 0;
-        for (int i=0; i<om.getFoodSupplies().size(); i++) {
-            if (s == om.getFoodSupply(i))
-                position = i;
-        }
-        updateSuppliesSpinner(position);
-        updateDishSpinner(0);
-    }
-
-    public void decreaseSupply(View v) {
-        OrderManager om = OrderManager.getInstance();
-        Supply s = om.getFoodSupply(supplySelected);
-        if (s.getFoodQty() > 0) {
-            s.setFoodQty(s.getFoodQty()-1);
+        if (supplySelected != null) {
+            OrderManager om = OrderManager.getInstance();
+            Supply s = om.getFoodSupply(supplySelected);
+            s.setFoodQty(s.getFoodQty() + 1);
             int position = 0;
-            for (int i=0; i<om.getFoodSupplies().size(); i++) {
+            for (int i = 0; i < om.getFoodSupplies().size(); i++) {
                 if (s == om.getFoodSupply(i))
                     position = i;
             }
             updateSuppliesSpinner(position);
             updateDishSpinner(0);
+        }
+    }
+
+    public void decreaseSupply(View v) {
+        if (supplySelected != null) {
+            OrderManager om = OrderManager.getInstance();
+            Supply s = om.getFoodSupply(supplySelected);
+            if (s.getFoodQty() > 0) {
+                s.setFoodQty(s.getFoodQty() - 1);
+                int position = 0;
+                for (int i = 0; i < om.getFoodSupplies().size(); i++) {
+                    if (s == om.getFoodSupply(i))
+                        position = i;
+                }
+                updateSuppliesSpinner(position);
+                updateDishSpinner(0);
+            }
         }
     }
     // ****
