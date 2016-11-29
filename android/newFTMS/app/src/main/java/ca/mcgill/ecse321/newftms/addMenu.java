@@ -144,11 +144,10 @@ public class addMenu extends AppCompatActivity {
 
         TextView tv1 = (TextView) findViewById(R.id.newstaff_name);
         TextView tv2 = (TextView) findViewById(R.id.newstaff_role);
-        TextView tv3 = (TextView) findViewById(R.id.newstaff_hours);
         Button bn = (Button) findViewById(R.id.newsupply_button);
 
         try {
-            fc.createEmployee(tv1.getText().toString(), tv2.getText().toString(), Integer.parseInt(tv3.getText().toString()));
+            fc.createEmployee(tv1.getText().toString(), tv2.getText().toString());
             refreshData();
         } catch (Exception e) {
             bn.setError(e.getMessage());

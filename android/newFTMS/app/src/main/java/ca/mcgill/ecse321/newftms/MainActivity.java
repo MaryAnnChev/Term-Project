@@ -12,6 +12,7 @@ import java.util.List;
 
 import ca.mcgill.ecse321.FTMS.controller.FTMSController;
 import ca.mcgill.ecse321.FTMS.model.OrderManager;
+import ca.mcgill.ecse321.FTMS.model.StaffManager;
 import ca.mcgill.ecse321.FTMS.model.Supply;
 import ca.mcgill.ecse321.FTMS.persistence.PersistenceFTMSOrder;
 import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamOrder;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         // Initiating various elements of the food truck
         OrderManager om = new OrderManager(); // completely new: old data is gone
         OrderManager.setInstance(om); // to get rid of old saved data
+        StaffManager sm = new StaffManager();
+        StaffManager.setInstance(sm);
         FTMSController fc = new FTMSController();
         try { // initiating all items since persistence does not work
             fc.createSupply("fries", 10);
@@ -57,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
             fc.createEquipment("deep fryer", 2);
             fc.createEquipment("knives", 10);
             fc.createEquipment("napkins", 50);
+
+            fc.createEmployee("Mark", "Cashier");
+            fc.createEmployee("Carl", "Chef");
         } catch (Exception e) {}
 
         ImageButton to_addMenu = (ImageButton) findViewById(R.id.addMenuButton);
@@ -72,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
         to_inventoryMenu.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, inventoryMenu.class));
+            }
+        });
+
+        ImageButton to_scheduleMenu = (ImageButton) findViewById(R.id.scheduleMenuButton);
+
+        to_scheduleMenu.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(MainActivity.this, scheduleMenu.class));
             }
         });
     }

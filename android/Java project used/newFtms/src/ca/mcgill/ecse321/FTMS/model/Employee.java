@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 // line 19 "../../../../../FTMS.ump"
 // line 130 "../../../../../FTMS.ump"
@@ -34,7 +35,7 @@ public class Employee
     schedule = new ArrayList<DayOfTheWeek>();
     
     // Initiating schedule.
-    Calendar c = Calendar.getInstance();
+    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("EST"));
     c.set(Calendar.HOUR_OF_DAY, 8);
     c.set(Calendar.MINUTE, 0);
     c.set(Calendar.SECOND, 0);
@@ -74,102 +75,18 @@ public class Employee
     return wasSet;
   }
 
-  public void setMonday(Time start, Time end)
+  public void setDayTimings(int day, Time start, Time end)
   {
-    schedule.get(0).setStartTime(start);
-    schedule.get(0).setEndTime(end);
+    this.schedule.get(day).setStartTime(start);
+    this.schedule.get(day).setEndTime(end);
   }
   
-  public void setTuesday(Time start, Time end)
-  {
-    schedule.get(1).setStartTime(start);
-    schedule.get(1).setEndTime(end);
+  public Time getDayStartTime(int day) {
+	  return this.schedule.get(day).getStartTime();
   }
   
-  public void setWednesday(Time start, Time end)
-  {
-    schedule.get(2).setStartTime(start);
-    schedule.get(2).setEndTime(end);
-  }
-  
-  public void setThursday(Time start, Time end)
-  {
-    schedule.get(3).setStartTime(start);
-    schedule.get(3).setEndTime(end);
-  }
-  
-  public void setFriday(Time start, Time end)
-  {
-    schedule.get(4).setStartTime(start);
-    schedule.get(4).setEndTime(end);
-  }
-  
-  public void setSaturday(Time start, Time end)
-  {
-    schedule.get(5).setStartTime(start);
-    schedule.get(5).setEndTime(end);
-  }
-  
-  public void setSunday(Time start, Time end)
-  {
-    schedule.get(6).setStartTime(start);
-    schedule.get(6).setEndTime(end);
-  }
-  
-  public Time getMondayStartTime() {
-	  return this.schedule.get(0).getStartTime();
-  }
-  
-  public Time getMondayEndTime() {
-	  return this.schedule.get(0).getEndTime();
-  }
-  
-  public Time getTuesdayStartTime() {
-	  return this.schedule.get(1).getStartTime();
-  }
-  
-  public Time getTuesdayEndTime() {
-	  return this.schedule.get(1).getEndTime();
-  }
-  
-  public Time getWednesdayStartTime() {
-	  return this.schedule.get(2).getStartTime();
-  }
-  
-  public Time getWednesdayEndTime() {
-	  return this.schedule.get(2).getEndTime();
-  }
-  
-  public Time getThursdayStartTime() {
-	  return this.schedule.get(3).getStartTime();
-  }
-  
-  public Time getThursdayEndTime() {
-	  return this.schedule.get(3).getEndTime();
-  }
-  
-  public Time getFridayStartTime() {
-	  return this.schedule.get(4).getStartTime();
-  }
-  
-  public Time getFridayEndTime() {
-	  return this.schedule.get(4).getEndTime();
-  }
-  
-  public Time getSaturdayStartTime() {
-	  return this.schedule.get(5).getStartTime();
-  }
-  
-  public Time getSaturdayEndTime() {
-	  return this.schedule.get(5).getEndTime();
-  }
-  
-  public Time getSundayStartTime() {
-	  return this.schedule.get(6).getStartTime();
-  }
-  
-  public Time getSundayEndTime() {
-	  return this.schedule.get(6).getEndTime();
+  public Time getDayEndTime(int day) {
+	  return this.schedule.get(day).getEndTime();
   }
 
   public String getStaffName()

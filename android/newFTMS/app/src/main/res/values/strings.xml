@@ -17,4 +17,7 @@
         <string name="title_activity_main_menu">mainMenu</string>
         <string name="newstaff_n_hint">Name?</string>
         <string name="newstaff_h_hint">Hours?</string>
+        <string name="update_schedule_button">UPDATE</string>
+        <string name="schedule_starttime_label">Start time</string>
+        <string name="schedule_endtime_label">End time</string>
 </resources>

@@ -15,7 +15,7 @@ public class StaffManager
   // STATIC VARIABLES
   //------------------------
 
-  private static StaffManager theInstance = null;
+  private static StaffManager theInstance = new StaffManager();
 
   //------------------------
   // MEMBER VARIABLES
@@ -30,7 +30,7 @@ public class StaffManager
   // CONSTRUCTOR
   //------------------------
 
-  private StaffManager()
+  public StaffManager()
   {
     employees = new ArrayList<Employee>();
     schedules = new ArrayList<Schedule>();
@@ -39,11 +39,11 @@ public class StaffManager
 
   public static StaffManager getInstance()
   {
-    if(theInstance == null)
-    {
-      theInstance = new StaffManager();
-    }
     return theInstance;
+  }
+  
+  public static void setInstance(StaffManager myInstance) { // to avoid having old saved data
+	  theInstance = myInstance;
   }
 
   //------------------------

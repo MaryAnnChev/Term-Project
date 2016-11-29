@@ -21,18 +21,16 @@ public class FTMSController {
 	{
 	}
 	
-	public void createEmployee(String staffName, String staffRoles, int hours)throws InvalidInputException
+	public void createEmployee(String staffName, String staffRoles)throws InvalidInputException
 	{		String error = "";
 		if (staffName.equals(""))
 			error= error +"Employee name cannot be empty!";
 		if (staffRoles.equals(""))
 			error= error + "Employee roles cannot be empty!";
-		if (hours==0)
-			error= error +"hours to work cannot be 0";
 		if (error.length()> 0)
 			throw new InvalidInputException(error);
 		
-		Employee e = new Employee(staffName,staffRoles,hours);
+		Employee e = new Employee(staffName,staffRoles);
 		
 		StaffManager sm = StaffManager.getInstance();
 		sm.addEmployee(e);
@@ -162,5 +160,14 @@ public class FTMSController {
 		PersistenceXStreamOrder.saveToXMLwithXStream(om);
 	}
 	
-	
+	public void updateSchedule(int staffPosition, int dotwPosition, Time start, Time end) throws Exception {
+		StaffManager sm = StaffManager.getInstance();
+		if (staffPosition != -1 && sm.getEmployees().size() > 0) {
+            if (!start.after(end))
+                sm.getEmployee(staffPosition).setDayTimings(dotwPosition, start, end);
+            else
+                throw new Exception("Start time has to be before End time.");
+        }
+		PersistenceXStreamOrder.saveToXMLwithXStream(sm);
+	}
 }

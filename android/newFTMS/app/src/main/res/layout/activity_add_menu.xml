@@ -128,11 +128,11 @@
                     android:id="@+id/newstaff_role"
                     android:hint="@string/newstaff_r_hint"/>
 
-                <EditText
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:id="@+id/newstaff_hours"
-                    android:hint="@string/newstaff_h_hint"/>
+                    android:textSize="15sp"
+                    android:text="Please go to the schedule menu to insert schedule information."/>
 
                 <Button
                     android:layout_width="wrap_content"
