@@ -3,11 +3,13 @@ package ca.mcgill.ecse321.FTMS.controller;
 import java.sql.Date;
 
 import java.sql.Time;
+import java.util.Iterator;
 
 import ca.mcgill.ecse321.FTMS.model.Employee;
 import ca.mcgill.ecse321.FTMS.model.Equipment;
 import ca.mcgill.ecse321.FTMS.model.Menu;
 import ca.mcgill.ecse321.FTMS.model.OrderManager;
+import ca.mcgill.ecse321.FTMS.model.OrderTracker;
 import ca.mcgill.ecse321.FTMS.model.Schedule;
 import ca.mcgill.ecse321.FTMS.model.ScheduleRegistration;
 import ca.mcgill.ecse321.FTMS.model.StaffManager;
@@ -29,14 +31,14 @@ public class FTMSController {
 			error= error + "Employee roles cannot be empty!";
 		if (hours==0)
 			error= error +"hours to work cannot be 0";
+		if (hours>40)
+			error = error + "Hours must be lower than the 40 hours";
 		if (error.length()> 0)
 			throw new InvalidInputException(error);
 		
 		Employee e = new Employee(staffName,staffRoles,hours);
-		
 		StaffManager sm = StaffManager.getInstance();
 		sm.addEmployee(e);
-		
 		PersistenceXStreamSchedule.saveToXMLwithXStream(sm);
 	}
 	
@@ -62,8 +64,8 @@ public class FTMSController {
 		StaffManager sm = StaffManager.getInstance();
 		sm.addSchedule(s);
 		PersistenceXStreamSchedule.saveToXMLwithXStream(sm);
-		
 	}
+	
 	public void scheduleRegister(Employee employee, Schedule schedule) throws InvalidInputException
 	{
 		StaffManager sm = StaffManager.getInstance();
@@ -92,54 +94,76 @@ public class FTMSController {
 		OrderManager om = OrderManager.getInstance();
 
 		String error="";
-
 		if (equipmentQty==0)
-			error=error+"Equipment quantity cannot be empty!";
+			error=error+"Equipment quantity cannot be zero!";
+		error = error.trim();
 		if (error.length()> 0)
 			throw new InvalidInputException(error);
 		
 		
 		Equipment e = new Equipment(equipmentName, equipmentQty);
-		
 		om.addEquipment(e);
-		
 		PersistenceXStreamOrder.saveToXMLwithXStream(om);
 	}
 	
 	public void createSupply(String foodName,int foodQty)throws InvalidInputException
 	{	
 		OrderManager om = OrderManager.getInstance();
-		String error="";
 		
+		String error="";
+		if (foodName==null)
+			error=error+"Food quantity has been updated";
 		if (foodQty==0)
-			error = error +"Food quantity cannot be empty!";
+			error = error +"Food quantity cannot be zero!";
+		error = error.trim();
 		if (error.length()> 0)
 			throw new InvalidInputException(error);
 		
+			
 		Supply s = new Supply(foodName, foodQty);
-		
 		om.addFoodSupply(s);
-		
 		PersistenceXStreamOrder.saveToXMLwithXStream(om);
 	}
 	
-	public void createMenu(String menuName, Supply ingredientName, int ingredientQty) throws InvalidInputException
+	public void createMenu(String menuName, Supply ingredientName,int ingredientQty, double price) throws InvalidInputException
 	{
 		
 			OrderManager om = OrderManager.getInstance();
 			String error = "";
 			if (menuName == null)
 				error = error + "Menu needs to be selected for Menu registration! ";
-			else if (ingredientName == null)
-				error = error + "Ingredient needs to be selected for Menu registration!";
-			else if(ingredientQty==0)
-				error=error+"ingredient quantity must be higher than 0";
+			if (ingredientName == null)
+				error = error + "Ingredient needs to be selected for Menu registration! ";
+			if(ingredientQty==0)
+				error=error+"Ingredient quantity must be higher than zero";
+			
 			error = error.trim();
+			if (price<0)
+				error=error+"Price must be positive";
+				if (error.length()> 0)
+				throw new InvalidInputException(error);
+			
+				Menu mr = new Menu(menuName, ingredientName,ingredientQty, price);
+				om.addMenus(mr);
+				PersistenceXStreamOrder.saveToXMLwithXStream(om);
+				
+	}
+	
+public void createTracker(String saleName, int saleQty) throws InvalidInputException
+	{
+		
+			OrderManager om = OrderManager.getInstance();
+			String error = "";
+			
+			if(saleQty==0)
+				error=error+"Sale quantity must be higher than 0";
+			error = error.trim();
+
 			if (error.length()> 0)
 				throw new InvalidInputException(error);
 			
-			Menu mr = new Menu(menuName, ingredientName, ingredientQty);
-				om.addMenus(mr);
+				OrderTracker sr = new OrderTracker(saleName,  saleQty);
+				om.addTracker(sr);
 				PersistenceXStreamOrder.saveToXMLwithXStream(om);
 				
 	}

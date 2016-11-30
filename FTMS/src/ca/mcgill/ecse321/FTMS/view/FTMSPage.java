@@ -14,7 +14,7 @@ public class FTMSPage extends JFrame {
 		private JButton viewScheduleButton;
 		private JButton viewInventoryButton;
 		private JButton viewMenuButton;
-		
+		private JButton viewTrackerButton;
 		
 		/** Creates new form FTMSPage */
 		public FTMSPage(){
@@ -30,6 +30,7 @@ public class FTMSPage extends JFrame {
 			viewScheduleButton = new JButton();
 			viewInventoryButton = new JButton();
 			viewMenuButton = new JButton();
+			viewTrackerButton = new JButton();
 			
 					
 			//global settings and listeners
@@ -50,12 +51,13 @@ public class FTMSPage extends JFrame {
 				}
 			});
 			
-			viewMenuButton.setText("Menu Manager");
+			viewMenuButton.setText("Menu Manager and Tracker");
 			viewMenuButton.addActionListener(new java.awt.event.ActionListener(){
 				public void actionPerformed(java.awt.event.ActionEvent evt){
 					viewMenuButtonActionPerformed(evt);
 				}
 			});
+			
 			
 			//layout
 			GroupLayout layout = new GroupLayout(getContentPane());
@@ -114,6 +116,8 @@ public class FTMSPage extends JFrame {
 			});
 
 		}
+	
+
 	}
 
 

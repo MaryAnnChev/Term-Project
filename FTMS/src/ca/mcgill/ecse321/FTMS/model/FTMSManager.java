@@ -3,16 +3,10 @@
 
 package ca.mcgill.ecse321.FTMS.model;
 
-// line 3 "../../../../../FTMS.ump"
-// line 122 "../../../../../FTMS.ump"
+// line 5 "../../../../../FTMS.ump"
+// line 235 "../../../../../FTMS.ump"
 public class FTMSManager
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static FTMSManager theInstance = null;
 
   //------------------------
   // MEMBER VARIABLES
@@ -26,16 +20,16 @@ public class FTMSManager
   // CONSTRUCTOR
   //------------------------
 
-  private FTMSManager()
-  {}
-
-  public static FTMSManager getInstance()
+  public FTMSManager(StaffManager aStaff, OrderManager aOrder)
   {
-    if(theInstance == null)
+    if (!setStaff(aStaff))
     {
-      theInstance = new FTMSManager();
+      throw new RuntimeException("Unable to create FTMSManager due to aStaff");
     }
-    return theInstance;
+    if (!setOrder(aOrder))
+    {
+      throw new RuntimeException("Unable to create FTMSManager due to aOrder");
+    }
   }
 
   //------------------------
@@ -47,36 +41,30 @@ public class FTMSManager
     return staff;
   }
 
-  public boolean hasStaff()
-  {
-    boolean has = staff != null;
-    return has;
-  }
-
   public OrderManager getOrder()
   {
     return order;
   }
 
-  public boolean hasOrder()
-  {
-    boolean has = order != null;
-    return has;
-  }
-
   public boolean setStaff(StaffManager aNewStaff)
   {
     boolean wasSet = false;
-    staff = aNewStaff;
-    wasSet = true;
+    if (aNewStaff != null)
+    {
+      staff = aNewStaff;
+      wasSet = true;
+    }
     return wasSet;
   }
 
   public boolean setOrder(OrderManager aNewOrder)
   {
     boolean wasSet = false;
-    order = aNewOrder;
-    wasSet = true;
+    if (aNewOrder != null)
+    {
+      order = aNewOrder;
+      wasSet = true;
+    }
     return wasSet;
   }
 

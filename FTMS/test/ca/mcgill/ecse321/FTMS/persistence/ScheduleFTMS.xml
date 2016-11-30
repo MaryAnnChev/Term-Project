@@ -21,12 +21,12 @@
   </schedules>
   <scheduleRegistrations id="10">
     <scheduleRegistration id="11">
-      <id>2</id>
+      <id>1</id>
       <employee reference="3"/>
       <schedule reference="6"/>
     </scheduleRegistration>
     <scheduleRegistration id="12">
-      <id>3</id>
+      <id>2</id>
       <employee reference="4"/>
       <schedule reference="6"/>
     </scheduleRegistration>

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.FTMS.view;
 
 import java.awt.Color;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -91,35 +92,8 @@ public class InventoryPage extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt){
 				JComboBox<String> cb =(JComboBox<String>)evt.getSource();
 				selectedFood = cb.getSelectedIndex();
-				
-				try {
-					File file = new File("OrderFTMS.xml");
-					DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-					        .newInstance();
-					DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-					Document doc = documentBuilder.parse(file);
-					
-					NodeList listOfSupplies = doc.getElementsByTagName("supply");
-					
-					int foodQty=0;
-					
-					for(int i=0; i<listOfSupplies.getLength(); i++) {
-						Node firstSupplyNode = listOfSupplies.item(i);
-						if (firstSupplyNode.getNodeType() == Node.ELEMENT_NODE) {
-							
-							foodQty = Integer.parseInt(((Element)firstSupplyNode).getFirstChild().getNextSibling().getNextSibling().getTextContent());
-							
-						}
-					}
-					foodQtySpinner.setValue(foodQty);
-
-					
-				}
-				catch (Exception e) {
-					System.out.println(e.getMessage());
-				}				
 			}
-		});
+				});
 
 		foodLabel = new JLabel();
 		
@@ -130,7 +104,6 @@ public class InventoryPage extends JFrame {
 		equipmentNameLabel = new JLabel();
 		SpinnerModel equip = new SpinnerNumberModel();
 		equipmentQtySpinner = new JSpinner(equip);
-		
 		equipmentQtyLabel = new JLabel();
 		
 		equipmentList = new JComboBox<String>(new String[0]);
@@ -157,6 +130,8 @@ public class InventoryPage extends JFrame {
 		});
 		equipmentNameLabel.setText("New Equiment:");
 		equipmentLabel.setText("Select Equipment:");
+		equipmentQtyLabel.setText("Add or Remove Quantity:");
+
 		
 		addEquipmentButton.setText("Add Equipment Inventory:");
 		addEquipmentButton.addActionListener(new java.awt.event.ActionListener(){
@@ -275,17 +250,36 @@ public class InventoryPage extends JFrame {
 		
 
 		//call the controller
+		
 		FTMSController erc = new FTMSController();
+		OrderManager om = OrderManager.getInstance();
+
 		String name;
-		error=null;
+		error="";
+		int foodqty = 0, index;
+		
+		if (selectedFood < 0 && foodNameTextField.getText()==null)
+			error = error + "Food must be selected or entered";
+			
+		if (selectedFood >0 && foodNameTextField.getText()!=null){
+			error=error+"Only one Food must be selected or entered";
+			foodNameTextField.setText("");
+			selectedFood=-1;
+		refreshData();
+		}
+		
 		if(foodNameTextField.getText() == null)
-		name= selectedFood.toString();
+		name= foodSupplies.get(selectedFood).toString();
 		else name=foodNameTextField.getText();
-		int foodqty = (int) foodQtySpinner.getValue(); 
+		
+		foodqty = (int) foodQtySpinner.getValue();
+		
+		if (error.length()==0){
 		try{
 			erc.createSupply(name, foodqty);
 		}catch(InvalidInputException e){
 			error = e.getMessage();
+		}
 		}
 		
 		//update visuals
@@ -293,42 +287,38 @@ public class InventoryPage extends JFrame {
 	}
 	private void addEquipmentButtonActionPerformed(java.awt.event.ActionEvent evt){
 		
+
 		//call the controller
 		FTMSController erc = new FTMSController();
 		int equipmentqty= (int) equipmentQtySpinner.getValue();
 		String name;
-		error= null;
+		error= "";
+		
+		if (selectedEquipment< 0 && equipmentNameTextField.getText()==null)
+		error=error+"Equipment must be selected or entered";
+		if (selectedEquipment== 0 && equipmentNameTextField.getText()!=null){
+			error=error+"Only one Equipment must be selected or entered";
+		equipmentNameTextField.setText("");
+		selectedFood=-1;
+			refreshData();
+		}
+
+			
 		if(equipmentNameTextField.getText() == null)
 			name= selectedEquipment.toString();
 		else name=equipmentNameTextField.getText();
+		if (error.length()==0){
 		
 		try{
 			erc.createEquipment(name,equipmentqty);
 		}catch(InvalidInputException e){
 			error = e.getMessage();
 		}
+		}
 		
 		//update visuals
 		refreshData();	
 	}
-	
-	/*private void getDocument (String filename) { // TODO: Close file or doc? So that it we can see what gets updated
-		try {
-			File file = new File("OrderFTMS.xml");
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-			        .newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			document = documentBuilder.parse(file);
-		}
-		catch (Exception e) {
-			System.out.println("Error reading xml file.");
-			System.out.println(e.getMessage());
-		}
-	}*/
-	
-	
-	
-	
 	}
 
 

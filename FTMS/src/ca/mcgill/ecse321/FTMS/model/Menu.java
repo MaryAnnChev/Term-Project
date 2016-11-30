@@ -3,8 +3,8 @@
 
 package ca.mcgill.ecse321.FTMS.model;
 
-// line 64 "../../../../../FTMS.ump"
-// line 87 "../../../../../FTMS.ump"
+// line 122 "../../../../../FTMS.ump"
+// line 167 "../../../../../FTMS.ump"
 public class Menu
 {
 
@@ -16,16 +16,18 @@ public class Menu
   private String mealName;
   private Supply ingredientName;
   private int ingredientQty;
+  private double price;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Menu(String aMealName, Supply aIngredientName, int aIngredientQty)
+  public Menu(String aMealName, Supply aIngredientName, int aIngredientQty, double aPrice)
   {
     mealName = aMealName;
     ingredientName = aIngredientName;
     ingredientQty = aIngredientQty;
+    price = aPrice;
   }
 
   //------------------------
@@ -56,6 +58,14 @@ public class Menu
     return wasSet;
   }
 
+  public boolean setPrice(double aPrice)
+  {
+    boolean wasSet = false;
+    price = aPrice;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getMealName()
   {
     return mealName;
@@ -71,6 +81,11 @@ public class Menu
     return ingredientQty;
   }
 
+  public double getPrice()
+  {
+    return price;
+  }
+
   public void delete()
   {}
 
@@ -80,7 +95,8 @@ public class Menu
 	  String outputString = "";
     return super.toString() + "["+
             "mealName" + ":" + getMealName()+ "," +
-            "ingredientQty" + ":" + getIngredientQty()+ "]" + System.getProperties().getProperty("line.separator") +
+            "ingredientQty" + ":" + getIngredientQty()+ "," +
+            "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "ingredientName" + "=" + (getIngredientName() != null ? !getIngredientName().equals(this)  ? getIngredientName().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }

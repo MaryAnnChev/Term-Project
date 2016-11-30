@@ -4,8 +4,8 @@
 package ca.mcgill.ecse321.FTMS.model;
 import java.util.*;
 
-// line 44 "../../../../../FTMS.ump"
-// line 104 "../../../../../FTMS.ump"
+// line 84 "../../../../../FTMS.ump"
+// line 201 "../../../../../FTMS.ump"
 public class OrderManager
 {
 
@@ -20,8 +20,8 @@ public class OrderManager
   //------------------------
 
   //OrderManager Associations
-  private List<Equipment> equipments;
   private List<Supply> foodSupplies;
+  private List<Equipment> equipments;
   private List<Menu> menus;
   private List<OrderTracker> tracker;
 
@@ -31,8 +31,8 @@ public class OrderManager
 
   private OrderManager()
   {
-    equipments = new ArrayList<Equipment>();
     foodSupplies = new ArrayList<Supply>();
+    equipments = new ArrayList<Equipment>();
     menus = new ArrayList<Menu>();
     tracker = new ArrayList<OrderTracker>();
   }
@@ -49,36 +49,6 @@ public class OrderManager
   //------------------------
   // INTERFACE
   //------------------------
-
-  public Equipment getEquipment(int index)
-  {
-    Equipment aEquipment = equipments.get(index);
-    return aEquipment;
-  }
-
-  public List<Equipment> getEquipments()
-  {
-    List<Equipment> newEquipments = Collections.unmodifiableList(equipments);
-    return newEquipments;
-  }
-
-  public int numberOfEquipments()
-  {
-    int number = equipments.size();
-    return number;
-  }
-
-  public boolean hasEquipments()
-  {
-    boolean has = equipments.size() > 0;
-    return has;
-  }
-
-  public int indexOfEquipment(Equipment aEquipment)
-  {
-    int index = equipments.indexOf(aEquipment);
-    return index;
-  }
 
   public Supply getFoodSupply(int index)
   {
@@ -107,6 +77,36 @@ public class OrderManager
   public int indexOfFoodSupply(Supply aFoodSupply)
   {
     int index = foodSupplies.indexOf(aFoodSupply);
+    return index;
+  }
+
+  public Equipment getEquipment(int index)
+  {
+    Equipment aEquipment = equipments.get(index);
+    return aEquipment;
+  }
+
+  public List<Equipment> getEquipments()
+  {
+    List<Equipment> newEquipments = Collections.unmodifiableList(equipments);
+    return newEquipments;
+  }
+
+  public int numberOfEquipments()
+  {
+    int number = equipments.size();
+    return number;
+  }
+
+  public boolean hasEquipments()
+  {
+    boolean has = equipments.size() > 0;
+    return has;
+  }
+
+  public int indexOfEquipment(Equipment aEquipment)
+  {
+    int index = equipments.indexOf(aEquipment);
     return index;
   }
 
@@ -170,63 +170,6 @@ public class OrderManager
     return index;
   }
 
-  public static int minimumNumberOfEquipments()
-  {
-    return 0;
-  }
-
-  public boolean addEquipment(Equipment aEquipment)
-  {
-    boolean wasAdded = false;
-    if (equipments.contains(aEquipment)) { return false; }
-    equipments.add(aEquipment);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeEquipment(Equipment aEquipment)
-  {
-    boolean wasRemoved = false;
-    if (equipments.contains(aEquipment))
-    {
-      equipments.remove(aEquipment);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-  public boolean addEquipmentAt(Equipment aEquipment, int index)
-  {  
-    boolean wasAdded = false;
-    if(addEquipment(aEquipment))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfEquipments()) { index = numberOfEquipments() - 1; }
-      equipments.remove(aEquipment);
-      equipments.add(index, aEquipment);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveEquipmentAt(Equipment aEquipment, int index)
-  {
-    boolean wasAdded = false;
-    if(equipments.contains(aEquipment))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfEquipments()) { index = numberOfEquipments() - 1; }
-      equipments.remove(aEquipment);
-      equipments.add(index, aEquipment);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addEquipmentAt(aEquipment, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfFoodSupplies()
   {
     return 0;
@@ -280,6 +223,63 @@ public class OrderManager
     else 
     {
       wasAdded = addFoodSupplyAt(aFoodSupply, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfEquipments()
+  {
+    return 0;
+  }
+
+  public boolean addEquipment(Equipment aEquipment)
+  {
+    boolean wasAdded = false;
+    if (equipments.contains(aEquipment)) { return false; }
+    equipments.add(aEquipment);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeEquipment(Equipment aEquipment)
+  {
+    boolean wasRemoved = false;
+    if (equipments.contains(aEquipment))
+    {
+      equipments.remove(aEquipment);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addEquipmentAt(Equipment aEquipment, int index)
+  {  
+    boolean wasAdded = false;
+    if(addEquipment(aEquipment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEquipments()) { index = numberOfEquipments() - 1; }
+      equipments.remove(aEquipment);
+      equipments.add(index, aEquipment);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveEquipmentAt(Equipment aEquipment, int index)
+  {
+    boolean wasAdded = false;
+    if(equipments.contains(aEquipment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEquipments()) { index = numberOfEquipments() - 1; }
+      equipments.remove(aEquipment);
+      equipments.add(index, aEquipment);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addEquipmentAt(aEquipment, index);
     }
     return wasAdded;
   }
@@ -400,8 +400,8 @@ public class OrderManager
 
   public void delete()
   {
-    equipments.clear();
     foodSupplies.clear();
+    equipments.clear();
     menus.clear();
     tracker.clear();
   }

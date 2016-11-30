@@ -62,7 +62,7 @@ public class TestPersistence {
 		Equipment eq = new Equipment("straw",3);
 				
 		//create Menu
-		Menu me = new Menu("hamburger",su,4);
+		Menu me = new Menu("hamburger",su,4, 4.00);
 		
 		om.addFoodSupply(su);
 		om.addEquipment(eq);
@@ -174,6 +174,7 @@ public class TestPersistence {
 				assertEquals("hamburger", om.getMenus(0).getMealName());
 				assertEquals(om.getFoodSupply(0), om.getMenus(0).getIngredientName());
 				assertEquals(4,om.getMenus(0).getIngredientQty());
+				assertEquals(4,00,om.getMenus(0).getPrice());
 				
 				
 				

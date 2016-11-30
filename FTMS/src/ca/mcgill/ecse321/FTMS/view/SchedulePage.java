@@ -342,7 +342,6 @@ public class SchedulePage extends JFrame {
 			error = error + "Employee needs to be selected for registration! ";
 		if (selectedSchedule < 0)
 			error = error + "Schedule needs to be selected for registration!";
-		error = error.trim();
 		if (error.length() == 0){
 			//call the controller
 			FTMSController erc = new FTMSController();

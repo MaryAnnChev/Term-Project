@@ -3,8 +3,8 @@
 
 package ca.mcgill.ecse321.FTMS.model;
 
-// line 35 "../../../../../FTMS.ump"
-// line 146 "../../../../../FTMS.ump"
+// line 66 "../../../../../FTMS.ump"
+// line 283 "../../../../../FTMS.ump"
 public class ScheduleRegistration
 {
 

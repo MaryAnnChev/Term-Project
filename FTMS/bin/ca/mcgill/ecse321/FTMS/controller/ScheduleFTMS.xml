@@ -3,7 +3,7 @@
     <employee id="3">
       <staffName>Ben</staffName>
       <staffRoles>Chef</staffRoles>
-      <hours>56</hours>
+      <hours>40</hours>
     </employee>
   </employees>
   <schedules id="4"/>

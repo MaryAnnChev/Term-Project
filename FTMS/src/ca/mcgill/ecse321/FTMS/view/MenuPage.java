@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.FTMS.view;
 
 import java.awt.Color;
 
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -23,12 +24,10 @@ import ca.mcgill.ecse321.FTMS.model.OrderManager;
 import ca.mcgill.ecse321.FTMS.model.Supply;
 
 public class MenuPage extends JFrame {
-
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 919724868025009115L;
+	private static final long serialVersionUID = 1962263549412602773L;
 	//UI elements
 	private JLabel errorMessage;
 	private JComboBox<String> menuList;
@@ -41,14 +40,25 @@ public class MenuPage extends JFrame {
 	private JSpinner ingredientQtySpinner;
 	private JLabel ingredientQtyLabel;
 	private JButton addMenuButton;
+	private JTextField priceTextField;
+	private JLabel priceLabel;
+	
+	private JComboBox<String> saleList;
+	private JLabel saleLabel;
+	private JSpinner saleQtySpinner;
+	private JLabel saleQtyLabel;
+	private JButton addTrackerButton;
 	
 	//data elements
-	private String error = null;
+	private String error =null;
 	private Integer selectedMenu = -1;
 	private HashMap<Integer, Menu> menus;
 	private Integer selectedIngredient = -1;
 	private HashMap<Integer, Supply> ingredients;
-	
+	private Integer selectedSales = -1;
+	private HashMap<Integer,Menu> sales;
+
+
 	/** Creates new form FTMSPage */
 	public MenuPage(){
 		initComponents();
@@ -71,6 +81,8 @@ public class MenuPage extends JFrame {
 		ingredientQtyLabel = new JLabel();
 		SpinnerModel ingredientqty = new SpinnerNumberModel();
 		ingredientQtySpinner = new JSpinner(ingredientqty);
+		priceTextField = new JTextField();
+		priceLabel = new JLabel();
 		
 		menuList = new JComboBox<String>(new String[0]);
 		menuList.addActionListener(new java.awt.event.ActionListener(){
@@ -92,14 +104,33 @@ public class MenuPage extends JFrame {
 		
 		addMenuButton = new JButton();
 		
+		// elements for Tracker
+				saleQtyLabel = new JLabel();
+				SpinnerModel saleqty = new SpinnerNumberModel();
+				saleQtySpinner = new JSpinner(saleqty);
+				saleList = new JComboBox<String>(new String[0]);
+				saleList.addActionListener(new java.awt.event.ActionListener(){
+					public void actionPerformed(java.awt.event.ActionEvent evt){
+						JComboBox<String> cb =(JComboBox<String>)evt.getSource();
+						selectedSales = cb.getSelectedIndex();
+					}
+				});
+				saleLabel = new JLabel();
+				
+				addTrackerButton = new JButton();
+				
 		//global settings and listeners
 		
-		setTitle("Menu Registration");
+		setTitle("Menu Registration and Tracker");
 				
 		menuNameLabel.setText("New Menu:");
 		menuLabel.setText("Select Menu:");
+		
 		ingredientLabel.setText("Select Ingredient:");
 		ingredientQtyLabel.setText("Quantity per Serving");
+
+		priceLabel.setText("Price");		
+		
 		addMenuButton.setText("Add Menu");
 		addMenuButton.addActionListener(new java.awt.event.ActionListener(){
 			public void actionPerformed(java.awt.event.ActionEvent evt){
@@ -107,6 +138,16 @@ public class MenuPage extends JFrame {
 			}
 		});
 		
+
+		
+		saleLabel.setText("Sold Menu:");
+		saleQtyLabel.setText("Sale quantity");
+		addTrackerButton.setText("Add Sales");
+		addTrackerButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt){
+				addTrackerButtonActionPerformed(evt);
+			}
+		});
 		//layout
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -120,17 +161,28 @@ public class MenuPage extends JFrame {
 						.addComponent(menuNameLabel)
 						.addComponent(menuLabel)
 						.addComponent(ingredientLabel)
-						.addComponent(ingredientQtyLabel))
+						.addComponent(ingredientQtyLabel)
+						.addComponent(priceLabel))
 
 				.addGroup(layout.createParallelGroup()
-						.addComponent(menuNameTextField, 200, 200, 400)					
+						.addComponent(menuNameTextField)					
 						.addComponent(menuList)
 						.addComponent(ingredientList)
 						.addComponent(ingredientQtySpinner)
-						.addComponent(addMenuButton)))
+						.addComponent(priceTextField)
+						.addComponent(addMenuButton))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(saleLabel)
+					.addComponent(saleQtyLabel))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(saleList)
+					.addComponent(saleQtySpinner)
+					.addComponent(addTrackerButton)))
 			
-				);
-			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[]{addMenuButton, menuLabel});
+					);
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[]{addMenuButton, menuNameTextField});
+			layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[]{addTrackerButton, saleList});
+
 				
 		
 		layout.setVerticalGroup(
@@ -138,23 +190,28 @@ public class MenuPage extends JFrame {
 				.addComponent(errorMessage)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(menuNameLabel)
-						.addComponent(menuNameTextField))
+						.addComponent(menuNameTextField)
+						.addComponent(saleLabel)
+						.addComponent(saleList))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(menuLabel)
-						.addComponent(menuList))
+						.addComponent(menuList)
+						.addComponent(saleQtyLabel)
+						.addComponent(saleQtySpinner))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(ingredientLabel)
-						.addComponent(ingredientList))
+						.addComponent(ingredientList)
+						.addComponent(addTrackerButton))
 				.addGroup(layout.createParallelGroup()
-
 						.addComponent(ingredientQtyLabel)
 						.addComponent(ingredientQtySpinner))
 				.addGroup(layout.createParallelGroup()
-
+						.addComponent(priceLabel)
+						.addComponent(priceTextField))
+				.addGroup(layout.createParallelGroup()
 						.addComponent(addMenuButton))
-						
 				);
-		pack();		
+		pack();
 
 	}
 	
@@ -164,21 +221,26 @@ public class MenuPage extends JFrame {
 		errorMessage.setText(error);
 		if(error==null|| error.length()== 0){
 			
-			//food list
+			//menu and sale list
 			menus = new HashMap<Integer, Menu>();
 			menuList.removeAllItems();
+			sales = new HashMap<Integer, Menu>();
+			saleList.removeAllItems();
+			
 			Iterator<Menu> mIt = om.getMenus().iterator();
 			Integer index = 0;
 			while(mIt.hasNext()){
 				Menu m = mIt.next();
 				menus.put(index, m);
 				menuList.addItem(m.getMealName());
+				sales.put(index, m);
+				saleList.addItem(m.getMealName());
 				index++;
 			}
 			selectedMenu = -1;
 			menuList.setSelectedIndex(selectedMenu);
 			
-			//equipment list
+			//ingredient list
 			ingredients = new HashMap<Integer, Supply>();
 			ingredientList.removeAllItems();
 			Iterator<Supply> sIt = om.getFoodSupplies().iterator();
@@ -195,26 +257,67 @@ public class MenuPage extends JFrame {
 			//Food
 			menuNameTextField.setText("");
 			ingredientQtySpinner.setValue(0);
-			//Equipment
+			priceTextField.setText("");
+			
+			//sale list
+			selectedSales = -1;
+			saleList.setSelectedIndex(selectedSales);
+			
+			//tracker
+			saleQtySpinner.setValue(0);
 			}
+		pack();
 
 	}
 	
 	private void addMenuButtonActionPerformed(java.awt.event.ActionEvent evt){
 		//call the controller
 		FTMSController erc = new FTMSController();
-		String menuName;
-		String error = "";
-		if(menuNameTextField.getText() == null)
+		String menuName="";
+		error = "";
+	
+		double price = Double.parseDouble(priceTextField.getText());
+		if (selectedMenu < 0 && menuNameTextField.getText()==null)
+			error = error + "Menu must be entered or selected";
+		if(selectedMenu == 0 && menuNameTextField.getText()!=null){
+			error = error + "Only one Menu must be entered or selected";
+		menuNameTextField.setText("");
+		selectedMenu=-1;
+			refreshData();
+		}
+
+		if (selectedIngredient < 0)
+			error = error + "Ingredient needs to be selected";
+		
+		else if(menuNameTextField.getText() == null)
 			menuName= selectedMenu.toString();
 		else menuName=menuNameTextField.getText();
-		int ingredientqty = (int) ingredientQtySpinner.getValue(); 
 		
-				
+		int ingredientqty = (int) ingredientQtySpinner.getValue(); 
+		if (ingredientqty<0)
+			error=error+"Positive quantity must be entered";
 		Supply ingredient= ingredients.get(selectedIngredient);
+		if (error.length()==0){
+		try{
+			erc.createMenu(menuName, ingredient, ingredientqty, price);
+		}catch(InvalidInputException e){
+			error = e.getMessage();
+		}	
+		}
+		//update visuals
+		refreshData();
+	}
+	private void addTrackerButtonActionPerformed(java.awt.event.ActionEvent evt){
+		//call the controller
+		FTMSController erc = new FTMSController();
+		error = "";
+		String sale= selectedSales.toString();
+		int saleqty = (int) saleQtySpinner.getValue(); 
+		if (selectedSales<0)
+			error=error+ "Sale item must be selected";
 		
 		try{
-			erc.createMenu(menuName, ingredient, ingredientqty);
+			erc.createTracker(sale, saleqty);
 		}catch(InvalidInputException e){
 			error = e.getMessage();
 		

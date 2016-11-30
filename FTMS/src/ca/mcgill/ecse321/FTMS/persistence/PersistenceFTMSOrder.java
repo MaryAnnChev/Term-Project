@@ -5,6 +5,7 @@ import java.util.Iterator;
 import ca.mcgill.ecse321.FTMS.model.Equipment;
 import ca.mcgill.ecse321.FTMS.model.Menu;
 import ca.mcgill.ecse321.FTMS.model.OrderManager;
+import ca.mcgill.ecse321.FTMS.model.OrderTracker;
 import ca.mcgill.ecse321.FTMS.model.Supply;
 
 
@@ -21,6 +22,7 @@ public class PersistenceFTMSOrder {
 		PersistenceXStreamOrder.setAlias("equipment", Equipment.class);
 		PersistenceXStreamOrder.setAlias("supply", Supply.class);
 		PersistenceXStreamOrder.setAlias("menu", Menu.class);
+		PersistenceXStreamOrder.setAlias("tracker", OrderTracker.class);
 		PersistenceXStreamOrder.setAlias("manager", OrderManager.class);
 		
 	}
@@ -39,10 +41,12 @@ public class PersistenceFTMSOrder {
 			while(eIt.hasNext())
 				om.addEquipment(eIt.next());
 			Iterator<Menu> mIt = om2.getMenus().iterator();
-			while(fIt.hasNext())
+			while(mIt.hasNext())
 				om.addMenus(mIt.next());
-			
-			}
+			Iterator<OrderTracker> tIt = om2.getTracker().iterator();
+			while(tIt.hasNext())
+				om.addTracker(tIt.next());
+		}
 		
 		
 	}
