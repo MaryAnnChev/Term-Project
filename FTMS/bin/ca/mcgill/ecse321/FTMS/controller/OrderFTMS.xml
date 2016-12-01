@@ -1,11 +1,19 @@
 <manager id="1">
-  <equipments id="2">
-    <equipment id="3">
-      <equipmentName>straw</equipmentName>
-      <equipmentQty>3</equipmentQty>
-    </equipment>
-  </equipments>
-  <foodSupplies id="4"/>
-  <menus id="5"/>
-  <tracker id="6"/>
+  <foodSupplies id="2"/>
+  <equipments id="3"/>
+  <menus id="4">
+    <menu id="5">
+      <mealName>Hamburger</mealName>
+      <ingredientName>tomatoes</ingredientName>
+      <ingredientQty>40</ingredientQty>
+      <price>10.0</price>
+    </menu>
+    <menu id="6">
+      <mealName>Hamburger</mealName>
+      <ingredientName>tomatoes</ingredientName>
+      <ingredientQty>40</ingredientQty>
+      <price>10.0</price>
+    </menu>
+  </menus>
+  <tracker id="7"/>
 </manager>

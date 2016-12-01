@@ -125,7 +125,7 @@ class Menu
 
   mealName;
 
- Supply  ingredientName;
+ ingredientName;
   Integer ingredientQty;
 Double price;
 
