@@ -2,8 +2,6 @@ package ca.mcgill.ecse321.newftms;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -78,8 +76,6 @@ public class addMenu extends AppCompatActivity {
         d.setError(null);
         Button st = (Button) findViewById(R.id.newstaff_button);
         st.setError(null);
-        Button mi = (Button) findViewById(R.id.newmenuitem_button);
-        mi.setError(null);
 
         updateSupplyListView();
     }

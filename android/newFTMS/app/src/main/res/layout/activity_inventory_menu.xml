@@ -66,6 +66,17 @@
                 android:id="@+id/dishes_ingredients_text"/>
 
             <Button
+                android:text="@string/customizeorder_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:focusable="true"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:onClick="customizeOrder"
+                android:id="@+id/customizeorder_button"/>
+
+            <Button
                 android:text="@string/order_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

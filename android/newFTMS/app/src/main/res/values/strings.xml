@@ -11,6 +11,8 @@
         <string name="newstaff_days_label">days?</string>
         <string name="newstaff_hours_label">hours?</string>
         <string name="order_button">ORDER</string>
+        <string name="customizeorder_button">CUSTOMIZE</string>
+        <string name="order_customized_button">ORDER CUSTOMIZED DISH</string>
         <string name="newmenuitem_n_hint">Dish name?</string>
         <string name="newmenuitem_p_hint">Price?</string>
         <string name="newmenuitem_button">ADD DISH</string>

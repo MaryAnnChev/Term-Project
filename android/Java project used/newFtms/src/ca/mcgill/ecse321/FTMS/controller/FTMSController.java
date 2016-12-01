@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.FTMS.controller;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse321.FTMS.model.Employee;
@@ -15,6 +16,30 @@ import ca.mcgill.ecse321.FTMS.model.Supply;
 import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamOrder;
 import ca.mcgill.ecse321.FTMS.persistence.PersistenceXStreamSchedule;
 
+/**
+ * @author Rony
+ *
+ */
+/**
+ * @author Rony
+ *
+ */
+/**
+ * @author Rony
+ *
+ */
+/**
+ * @author Rony
+ *
+ */
+/**
+ * @author Rony
+ *
+ */
+/**
+ * @author Rony
+ *
+ */
 public class FTMSController {
 
 	public FTMSController()
@@ -147,6 +172,12 @@ public class FTMSController {
 				
 	}
 	
+	/**
+	 * Takes the menu name and increments its popularity. It also decreases all the supplies of this
+	 * menu item by 1 and if one of the supplies was already missing then it throws an exception and does not place the order.
+	 * @param menuName
+	 * @throws Exception
+	 */
 	public void placeOrder(String menuName) throws Exception {
 		OrderManager om = OrderManager.getInstance();
 		Menu menu = om.getMenu(menuName);
@@ -162,6 +193,15 @@ public class FTMSController {
 		PersistenceXStreamOrder.saveToXMLwithXStream(om);
 	}
 	
+	/**
+	 * Modifies the staff's start and end time for a specific day of the week. If the start time is
+	 * after the end time then it throws an exception.
+	 * @param staffPosition
+	 * @param dotwPosition
+	 * @param start
+	 * @param end
+	 * @throws Exception
+	 */
 	public void updateSchedule(int staffPosition, int dotwPosition, Time start, Time end) throws Exception {
 		StaffManager sm = StaffManager.getInstance();
 		if (staffPosition != -1 && sm.getEmployees().size() > 0) {
@@ -171,5 +211,30 @@ public class FTMSController {
                 throw new Exception("Start time has to be before End time.");
         }
 		PersistenceXStreamOrder.saveToXMLwithXStream(sm);
+	}
+	
+	public void orderCustomizedMeal(Menu menuSelected, Supply[] removeSupplies, Supply[] extraSupplies) throws Exception {
+		OrderManager om = OrderManager.getInstance();
+				
+		// Checking that we have enough supplies.
+		for (int i=0; i<extraSupplies.length; i++) {
+			if (extraSupplies[i].getFoodQty() < 2)
+				throw new Exception("There are not enough supplies.");
+		}
+		for (int i=0; i<menuSelected.getIngredients().size(); i++) {
+			if (menuSelected.getIngredients().get(i).getFoodQty() < 1)
+				throw new Exception("There are not enough supplies.");
+		}
+		
+		// Ordering: decreasing supply quantities and increasing popularity
+		for (int i=0; i<menuSelected.getIngredients().size(); i++) {
+			Supply currentSupply = menuSelected.getIngredients().get(i);
+			currentSupply.setFoodQty(currentSupply.getFoodQty()-1);
+		}
+		for (int i=0; i<removeSupplies.length; i++)
+			removeSupplies[i].setFoodQty(removeSupplies[i].getFoodQty()+1);
+		for (int i=0; i<extraSupplies.length; i++)
+			extraSupplies[i].setFoodQty(extraSupplies[i].getFoodQty()-1);
+		menuSelected.setPopularity(menuSelected.getPopularity()+1);
 	}
 }

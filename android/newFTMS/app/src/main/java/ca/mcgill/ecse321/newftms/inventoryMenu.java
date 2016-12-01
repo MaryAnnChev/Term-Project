@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.newftms;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ public class inventoryMenu extends AppCompatActivity {
     private String equipmentSelected = null;
     private String dishSelected = null;
     private String supplySelected = null;
+    private int dishPosition = 0;
+    private int equipmentPosition = 0;
+    private int supplyPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class inventoryMenu extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 equipmentSelected = itemsE[position];
+                equipmentPosition = position;
             }
 
             @Override
@@ -74,6 +79,7 @@ public class inventoryMenu extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 dishSelected = itemsD[position];
+                dishPosition = position;
                 updateDishInfo();
             }
 
@@ -87,7 +93,7 @@ public class inventoryMenu extends AppCompatActivity {
         TextView t_s = (TextView) findViewById(R.id.supplies_inventory_label);
         t_s.setTextColor(Color.rgb(0, 0, 200));
         Spinner supplies = (Spinner)findViewById(R.id.supplies_spinner);
-        int numberOfS = om.getEquipments().size();
+        int numberOfS = om.getFoodSupplies().size();
         final String[] itemsS = new String[numberOfS];
         final String[] displayedS = new String[numberOfS];
         for (int i=0; i<numberOfS; i++) {
@@ -101,6 +107,7 @@ public class inventoryMenu extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 supplySelected = itemsS[position];
+                supplyPosition = position;
             }
 
             @Override
@@ -111,7 +118,7 @@ public class inventoryMenu extends AppCompatActivity {
     }
 
     // Equipment functions ****
-    private void updateEquipmentSpinner(int spinnerPosition) {
+    private void updateEquipmentSpinner() {
         OrderManager om = OrderManager.getInstance();
 
         Spinner equipment = (Spinner)findViewById(R.id.equipment_spinner);
@@ -122,7 +129,7 @@ public class inventoryMenu extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, displayed);
         equipment.setAdapter(adapter);
-        equipment.setSelection(spinnerPosition);
+        equipment.setSelection(equipmentPosition);
     }
 
     public void increaseEquipment(View v) {
@@ -130,12 +137,7 @@ public class inventoryMenu extends AppCompatActivity {
             OrderManager om = OrderManager.getInstance();
             Equipment e = om.getEquipment(equipmentSelected);
             e.setEquipmentQty(e.getEquipmentQty() + 1);
-            int position = 0;
-            for (int i = 0; i < om.getEquipments().size(); i++) {
-                if (e == om.getEquipment(i))
-                    position = i;
-            }
-            updateEquipmentSpinner(position);
+            updateEquipmentSpinner();
         }
     }
 
@@ -145,19 +147,14 @@ public class inventoryMenu extends AppCompatActivity {
             Equipment e = om.getEquipment(equipmentSelected);
             if (e.getEquipmentQty() > 0) {
                 e.setEquipmentQty(e.getEquipmentQty() - 1);
-                int position = 0;
-                for (int i = 0; i < om.getEquipments().size(); i++) {
-                    if (e == om.getEquipment(i))
-                        position = i;
-                }
-                updateEquipmentSpinner(position);
+                updateEquipmentSpinner();
             }
         }
     }
     // ****
 
     // Dishes functions ****
-    private void updateDishSpinner(int spinnerPosition) {
+    private void updateDishSpinner() {
         OrderManager om = OrderManager.getInstance();
 
         Spinner dish = (Spinner)findViewById(R.id.dishes_spinner);
@@ -168,7 +165,7 @@ public class inventoryMenu extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, displayed);
         dish.setAdapter(adapter);
-        dish.setSelection(spinnerPosition);
+        dish.setSelection(dishPosition);
     }
 
     public void updateDishInfo() {
@@ -192,29 +189,32 @@ public class inventoryMenu extends AppCompatActivity {
         dishIngredients.setText(ingredients);
     }
 
+    public void customizeOrder(View v) {
+        if (dishSelected != null) {
+            Intent intent = new Intent(inventoryMenu.this, customizeMenu.class);
+            intent.putExtra("dishSelected", dishSelected);
+            startActivity(intent);
+            startActivityForResult(intent, 4);
+        }
+    }
+
     public void placeOrder(View v) {
         if (dishSelected != null) {
             Button order = (Button) findViewById(R.id.order_button);
             order.setError(null);
-            OrderManager om = OrderManager.getInstance();
-            int position = 0;
             try {
                 fc.placeOrder(dishSelected);
-                for (int i = 0; i < om.getMenus().size(); i++) {
-                    if (om.getMenu(dishSelected) == om.getMenu(i))
-                        position = i;
-                }
             } catch (Exception e) {
                 order.setError(e.getMessage());
             }
-            updateDishSpinner(position);
-            updateSuppliesSpinner(0);
+            updateDishSpinner();
+            updateSuppliesSpinner();
         }
     }
     // ****
 
     // Supplies functions ****
-    private void updateSuppliesSpinner(int spinnerPosition) {
+    private void updateSuppliesSpinner() {
         OrderManager om = OrderManager.getInstance();
 
         Spinner supplies = (Spinner)findViewById(R.id.supplies_spinner);
@@ -225,7 +225,7 @@ public class inventoryMenu extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, displayed);
         supplies.setAdapter(adapter);
-        supplies.setSelection(spinnerPosition);
+        supplies.setSelection(supplyPosition);
     }
 
     public void increaseSupply(View v) {
@@ -233,13 +233,8 @@ public class inventoryMenu extends AppCompatActivity {
             OrderManager om = OrderManager.getInstance();
             Supply s = om.getFoodSupply(supplySelected);
             s.setFoodQty(s.getFoodQty() + 1);
-            int position = 0;
-            for (int i = 0; i < om.getFoodSupplies().size(); i++) {
-                if (s == om.getFoodSupply(i))
-                    position = i;
-            }
-            updateSuppliesSpinner(position);
-            updateDishSpinner(0);
+            updateSuppliesSpinner();
+            updateDishSpinner();
         }
     }
 
@@ -249,15 +244,20 @@ public class inventoryMenu extends AppCompatActivity {
             Supply s = om.getFoodSupply(supplySelected);
             if (s.getFoodQty() > 0) {
                 s.setFoodQty(s.getFoodQty() - 1);
-                int position = 0;
-                for (int i = 0; i < om.getFoodSupplies().size(); i++) {
-                    if (s == om.getFoodSupply(i))
-                        position = i;
-                }
-                updateSuppliesSpinner(position);
-                updateDishSpinner(0);
+                updateSuppliesSpinner();
+                updateDishSpinner();
             }
         }
     }
     // ****
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 4) {
+            updateDishSpinner();
+            updateDishInfo();
+            updateSuppliesSpinner();
+            updateEquipmentSpinner();
+        }
+    }
 }
